@@ -7,8 +7,10 @@ environment:
   sdk: ^3.9.2
 
 dependencies:
+  chess: ^0.8.1
   flutter:
     sdk: flutter
+  simple_chess_board: ^1.9.0
 
 dev_dependencies:
   flutter_test:
