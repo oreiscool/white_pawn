@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:simple_chess_board/simple_chess_board.dart';
+import 'chess_sqaure.dart';
 
 class ChessBoard extends StatefulWidget {
   const ChessBoard({super.key});
@@ -11,21 +11,22 @@ class ChessBoard extends StatefulWidget {
 class _ChessBoardState extends State<ChessBoard> {
   @override
   Widget build(BuildContext context) {
-    return SimpleChessBoard(
-      engineThinking: false,
-      fen: 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1',
-      whitePlayerType: PlayerType.human,
-      blackPlayerType: PlayerType.computer,
-      onMove: ({required move}) => debugPrint('Move made: $move'),
-      onPromote: () async => PieceType.queen,
-      onPromotionCommited: ({required moveDone, required pieceType}) =>
-          debugPrint('Promotion done: $moveDone to $pieceType'),
-      onTap: ({required cellCoordinate}) =>
-          debugPrint('Cell tapped: $cellCoordinate'),
-      chessBoardColors: ChessBoardColors()
-        ..lightSquaresColor = Colors.white
-        ..darkSquaresColor = Colors.grey,
-      cellHighlights: const {},
+    return SizedBox(
+      width: 500,
+      height: 500,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 8,
+          childAspectRatio: 1,
+        ),
+        physics: NeverScrollableScrollPhysics(),
+        itemCount: 64,
+        itemBuilder: (context, index) {
+          final int row = index ~/ 8;
+          final int col = index % 8;
+          return ChessSquare(row: row, col: col);
+        },
+      ),
     );
   }
 }
