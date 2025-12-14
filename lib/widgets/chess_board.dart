@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'chess_sqaure.dart';
+import 'chess_square.dart';
 
 class ChessBoard extends StatefulWidget {
   const ChessBoard({super.key});
