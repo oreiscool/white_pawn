@@ -10,6 +10,7 @@ dependencies:
   chess: ^0.8.1
   flutter:
     sdk: flutter
+  flutter_svg: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -17,4 +18,17 @@ dev_dependencies:
   flutter_lints: ^5.0.0
 
 flutter:
+  assets:
+    - assets/chess_pieces/bishop-b.svg
+    - assets/chess_pieces/bishop-w.svg
+    - assets/chess_pieces/king-b.svg
+    - assets/chess_pieces/king-w.svg
+    - assets/chess_pieces/knight-b.svg
+    - assets/chess_pieces/knight-w.svg
+    - assets/chess_pieces/pawn-b.svg
+    - assets/chess_pieces/pawn-w.svg
+    - assets/chess_pieces/queen-b.svg
+    - assets/chess_pieces/queen-w.svg
+    - assets/chess_pieces/rook-b.svg
+    - assets/chess_pieces/rook-w.svg
   uses-material-design: true
