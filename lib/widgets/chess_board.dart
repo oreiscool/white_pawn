@@ -10,6 +10,9 @@ class ChessBoard extends StatefulWidget {
 }
 
 class _ChessBoardState extends State<ChessBoard> {
+  int? selectedRow;
+  int? selectedCol;
+
   late List<List<ChessPiece?>> board = List.generate(
     8,
     (index) => List.generate(8, (index) => null),
@@ -58,7 +61,29 @@ class _ChessBoardState extends State<ChessBoard> {
         itemBuilder: (context, index) {
           final int row = index ~/ 8;
           final int col = index % 8;
-          return ChessSquare(row: row, col: col, piece: board[row][col]);
+          return GestureDetector(
+            onTap: () => setState(() {
+              if (selectedRow == row && selectedCol == col) {
+                selectedRow = null;
+                selectedCol = null;
+              } else if (selectedRow != null && selectedCol != null) {
+                final piece = board[selectedRow!][selectedCol!];
+                board[selectedRow!][selectedCol!] = null;
+                board[row][col] = piece;
+                selectedRow = null;
+                selectedCol = null;
+              } else {
+                selectedRow = row;
+                selectedCol = col;
+              }
+            }),
+            child: ChessSquare(
+              row: row,
+              col: col,
+              piece: board[row][col],
+              isSelected: selectedRow == row && selectedCol == col,
+            ),
+          );
         },
       ),
     );

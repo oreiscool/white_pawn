@@ -7,18 +7,20 @@ class ChessSquare extends StatelessWidget {
   final int row;
   final int col;
   final ChessPiece? piece;
+  final bool isSelected;
 
   const ChessSquare({
     super.key,
     required this.row,
     required this.col,
-    this.piece,
+    required this.piece,
+    required this.isSelected,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: getSquareColor(row, col),
+      color: isSelected ? Colors.yellow : getSquareColor(row, col),
       child: piece != null ? SvgPicture.asset(piece!.getImagePath()) : null,
     );
   }
