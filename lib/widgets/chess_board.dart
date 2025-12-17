@@ -26,8 +26,8 @@ class _ChessBoardState extends State<ChessBoard> {
 
   void _initializeBoard() {
     for (int col = 0; col < 8; col++) {
-      board[6][col] = ChessPiece(type: ChessPieceType.pawn, isWhite: false);
-      board[1][col] = ChessPiece(type: ChessPieceType.pawn, isWhite: true);
+      board[1][col] = ChessPiece(type: ChessPieceType.pawn, isWhite: false);
+      board[6][col] = ChessPiece(type: ChessPieceType.pawn, isWhite: true);
     }
 
     final pieceOrder = [
@@ -42,8 +42,8 @@ class _ChessBoardState extends State<ChessBoard> {
     ];
 
     for (int col = 0; col < 8; col++) {
-      board[0][col] = ChessPiece(type: pieceOrder[col], isWhite: true);
-      board[7][col] = ChessPiece(type: pieceOrder[col], isWhite: false);
+      board[0][col] = ChessPiece(type: pieceOrder[col], isWhite: false);
+      board[7][col] = ChessPiece(type: pieceOrder[col], isWhite: true);
     }
   }
 
