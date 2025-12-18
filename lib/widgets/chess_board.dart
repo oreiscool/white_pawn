@@ -14,6 +14,9 @@ class ChessBoard extends StatefulWidget {
 class _ChessBoardState extends State<ChessBoard> {
   int? selectedRow;
   int? selectedCol;
+  int? kingRow;
+  int? kingCol;
+  bool isKingInCheck = false;
   Set<dynamic> validDestinations = {};
   late chess.Chess gameChess;
   late List<List<ChessPiece?>> board = List.generate(
@@ -101,9 +104,35 @@ class _ChessBoardState extends State<ChessBoard> {
     return '$file$rank';
   }
 
+  // Helper to find the king's position and check status
+  void _kingSquare() {
+    isKingInCheck = gameChess.in_check;
+    bool isWhiteTurn = gameChess.turn == chess.Chess.WHITE;
+
+    kingRow = null;
+    kingCol = null;
+
+    for (int r = 0; r < 8; r++) {
+      for (int c = 0; c < 8; c++) {
+        String square = _rowColToNotation(r, c);
+        var piece = gameChess.get(square);
+        if (piece != null &&
+            piece.type == chess.Chess.KING &&
+            piece.color ==
+                (isWhiteTurn ? chess.Chess.WHITE : chess.Chess.BLACK)) {
+          kingRow = r;
+          kingCol = c;
+          break;
+        }
+      }
+      if (kingRow != null) break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     List<dynamic> legalMoves = gameChess.generate_moves();
+    _kingSquare();
 
     return SizedBox(
       width: 500,
@@ -179,6 +208,8 @@ class _ChessBoardState extends State<ChessBoard> {
               isValidDestination: validDestinations.contains(
                 _rowColToNotation(row, col),
               ),
+              isKingInCheck:
+                  isKingInCheck && (kingRow == row && kingCol == col),
             ),
           );
         },

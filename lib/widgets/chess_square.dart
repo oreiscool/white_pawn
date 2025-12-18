@@ -9,6 +9,7 @@ class ChessSquare extends StatelessWidget {
   final ChessPiece? piece;
   final bool isSelected;
   final bool isValidDestination;
+  final bool isKingInCheck;
 
   const ChessSquare({
     super.key,
@@ -17,12 +18,15 @@ class ChessSquare extends StatelessWidget {
     required this.piece,
     required this.isSelected,
     required this.isValidDestination,
+    required this.isKingInCheck,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: isSelected ? Colors.yellow : getSquareColor(row, col),
+      color: isKingInCheck
+          ? Colors.redAccent
+          : (isSelected ? Colors.yellow : getSquareColor(row, col)),
       child: Stack(
         alignment: Alignment.center,
         children: [
