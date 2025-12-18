@@ -14,6 +14,7 @@ class ChessBoard extends StatefulWidget {
 class _ChessBoardState extends State<ChessBoard> {
   int? selectedRow;
   int? selectedCol;
+  Set<dynamic> validDestinations = {};
   late chess.Chess gameChess;
   late List<List<ChessPiece?>> board = List.generate(
     8,
@@ -121,9 +122,19 @@ class _ChessBoardState extends State<ChessBoard> {
               if (selectedRow == null) {
                 selectedRow = row;
                 selectedCol = col;
+
+                String selectedSquare = _rowColToNotation(
+                  selectedRow!,
+                  selectedCol!,
+                );
+                validDestinations = legalMoves
+                    .where((move) => move.fromAlgebraic == selectedSquare)
+                    .map((move) => move.toAlgebraic)
+                    .toSet();
               } else if (selectedRow == row && selectedCol == col) {
                 selectedRow = null;
                 selectedCol = null;
+                validDestinations.clear();
               } else {
                 String fromSquare = _rowColToNotation(
                   selectedRow!,
@@ -148,6 +159,15 @@ class _ChessBoardState extends State<ChessBoard> {
                   _syncBoardWithGame();
                   selectedRow = null;
                   selectedCol = null;
+                  validDestinations.clear();
+                } else {
+                  selectedRow = row;
+                  selectedCol = col;
+                  String newSelectedSquare = _rowColToNotation(row, col);
+                  validDestinations = legalMoves
+                      .where((move) => move.fromAlgebraic == newSelectedSquare)
+                      .map((move) => move.toAlgebraic)
+                      .toSet();
                 }
               }
             }),
@@ -156,6 +176,9 @@ class _ChessBoardState extends State<ChessBoard> {
               col: col,
               piece: board[row][col],
               isSelected: selectedRow == row && selectedCol == col,
+              isValidDestination: validDestinations.contains(
+                _rowColToNotation(row, col),
+              ),
             ),
           );
         },

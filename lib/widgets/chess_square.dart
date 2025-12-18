@@ -8,6 +8,7 @@ class ChessSquare extends StatelessWidget {
   final int col;
   final ChessPiece? piece;
   final bool isSelected;
+  final bool isValidDestination;
 
   const ChessSquare({
     super.key,
@@ -15,13 +16,42 @@ class ChessSquare extends StatelessWidget {
     required this.col,
     required this.piece,
     required this.isSelected,
+    required this.isValidDestination,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       color: isSelected ? Colors.yellow : getSquareColor(row, col),
-      child: piece != null ? SvgPicture.asset(piece!.getImagePath()) : null,
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          if (piece != null)
+            SizedBox.expand(child: SvgPicture.asset(piece!.getImagePath())),
+          if (isValidDestination)
+            if (piece != null)
+              Container(
+                width: 64,
+                height: 64,
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.black54.withAlpha(150),
+                    width: 2,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              )
+            else
+              Container(
+                width: 12,
+                height: 12,
+                decoration: BoxDecoration(
+                  color: Colors.black54.withAlpha(150),
+                  shape: BoxShape.circle,
+                ),
+              ),
+        ],
+      ),
     );
   }
 }
