@@ -17,6 +17,8 @@ class _ChessBoardState extends State<ChessBoard> {
   int? kingRow;
   int? kingCol;
   bool isKingInCheck = false;
+  bool gameEndDialogShown = false;
+  String winningColor = '';
   Set<dynamic> validDestinations = {};
   late chess.Chess gameChess;
   late List<List<ChessPiece?>> board = List.generate(
@@ -133,6 +135,35 @@ class _ChessBoardState extends State<ChessBoard> {
   Widget build(BuildContext context) {
     List<dynamic> legalMoves = gameChess.generate_moves();
     _kingSquare();
+
+    bool isCheckMate = gameChess.in_checkmate;
+    bool isStaleMate = gameChess.in_stalemate;
+    winningColor = gameChess.turn == chess.Chess.WHITE ? 'Black' : 'White';
+
+    if (isCheckMate && !gameEndDialogShown) {
+      gameEndDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+              "Checkmate!\n$winningColor is Victorious.",
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      });
+    } else if (isStaleMate && !gameEndDialogShown) {
+      gameEndDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text("Stalemate!", textAlign: TextAlign.center),
+          ),
+        );
+      });
+    }
 
     return SizedBox(
       width: 500,
