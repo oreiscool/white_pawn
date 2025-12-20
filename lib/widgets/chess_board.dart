@@ -18,6 +18,7 @@ class _ChessBoardState extends State<ChessBoard> {
   int? kingCol;
   bool isKingInCheck = false;
   bool gameEndDialogShown = false;
+  bool gameOver = false;
   String winningColor = '';
   Set<dynamic> validDestinations = {};
   late chess.Chess gameChess;
@@ -138,9 +139,13 @@ class _ChessBoardState extends State<ChessBoard> {
 
     bool isCheckMate = gameChess.in_checkmate;
     bool isStaleMate = gameChess.in_stalemate;
+    bool isThreeFoldRepetition = gameChess.in_threefold_repetition;
+    bool isInsufficientMaterial = gameChess.insufficient_material;
+    bool is50MoveRule = gameChess.half_moves >= 100;
     winningColor = gameChess.turn == chess.Chess.WHITE ? 'Black' : 'White';
 
     if (isCheckMate && !gameEndDialogShown) {
+      gameOver = true;
       gameEndDialogShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
@@ -154,12 +159,55 @@ class _ChessBoardState extends State<ChessBoard> {
         );
       });
     } else if (isStaleMate && !gameEndDialogShown) {
+      gameOver = true;
       gameEndDialogShown = true;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
             content: Text("Stalemate!", textAlign: TextAlign.center),
+          ),
+        );
+      });
+    } else if (isThreeFoldRepetition && !gameEndDialogShown) {
+      gameOver = true;
+      gameEndDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+              "Draw by Threefold Repetition!",
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      });
+    } else if (isInsufficientMaterial && !gameEndDialogShown) {
+      gameOver = true;
+      gameEndDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+              "Draw by Insufficient Material!",
+              textAlign: TextAlign.center,
+            ),
+          ),
+        );
+      });
+    } else if ((is50MoveRule) && !gameEndDialogShown) {
+      gameOver = true;
+      gameEndDialogShown = true;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            content: Text(
+              "Draw by Fifty-Move Rule!",
+              textAlign: TextAlign.center,
+            ),
           ),
         );
       });
@@ -179,6 +227,8 @@ class _ChessBoardState extends State<ChessBoard> {
           final int col = index % 8;
           return GestureDetector(
             onTap: () => setState(() {
+              if (gameOver) return;
+
               if (selectedRow == null) {
                 selectedRow = row;
                 selectedCol = col;
